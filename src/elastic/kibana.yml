@@ -1,0 +1,97 @@
+server.host: 0.0.0.0
+
+xpack.fleet.packages:
+  - name: fleet_server
+    version: latest
+  # - name: apm
+  #   version: latest
+  # - name: prometheus
+  #   version: latest    
+xpack.fleet.agentPolicies:
+  - name: Fleet Server policy
+    id: fleet-server-policy
+    namespace: default
+    is_default_fleet_server: true
+    data_output_id: es01
+    monitoring_output_id: es01    
+    package_policies:
+      - name: fleet_server-1
+        package:
+          name: fleet_server
+      # - name: apm-1
+      #   package:
+      #     name: apm
+      #   inputs:
+      #     - type: apm
+      #       keep_enabled: true
+      #       vars:
+      #         - name: host
+      #           value: 0.0.0.0:8200
+      #           frozen: true
+      #         - name: url
+      #           value: http://fleet:8200
+      #           frozen: true
+      #         - name: enable_rum
+      #           value: false
+      #           frozen: true
+      #         - name: read_timeout
+      #           value: 1m
+      #           frozen: true
+      #         - name: shutdown_timeout
+      #           value: 2m
+      #           frozen: true
+      #         - name: write_timeout
+      #           value: 1m
+      #           frozen: true
+      #         - name: rum_allow_headers
+      #           value:
+      #             - x-custom-header
+      #           frozen: true
+      #         - name: secret_token
+      #           value: ""
+      #           frozen: true
+      #         - name: tls_enabled
+      #           value: false
+      #           frozen: true
+      #         - name: tls_certificate
+      #           value: ""
+      #           frozen: true
+      #         - name: tls_key
+      #           value: ""
+      #           frozen: true
+      # - name: prometheus-1
+      #   package:
+      #     name: prometheus
+      #   inputs:
+      #     - type: prometheus/metrics
+      #       keep_enabled: true
+      #       streams:
+      #         - data_stream: 
+      #             dataset: prometheus.collector
+      #           enabled: false
+      #           vars: []
+      #         - data_stream: 
+      #             dataset: prometheus.query
+      #           enabled: false
+      #           vars: []
+      #         - data_stream: 
+      #             dataset: prometheus.remote_write
+      #           enabled: true
+      #           vars:
+      #             - name: host
+      #               value: 0.0.0.0
+      #             - name: port
+      #               value: 9201
+      #             - name: ssl.enabled
+      #               value: false
+
+xpack.fleet.outputs:
+  - id: es01
+    name: ES01
+    type: elasticsearch
+    hosts:
+      - ${ES_URL}
+    config:
+      ssl.verification_mode: none
+    is_default: true
+    is_default_monitoring: true
